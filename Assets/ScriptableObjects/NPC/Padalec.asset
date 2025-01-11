@@ -16,6 +16,6 @@ MonoBehaviour:
   badAnswerLog: HAH JESTEM DLA CIEBIE ZA DOBRY
   goodAnswerLog: A TAK JESTEM TAK DOBRY  ZE DAM CI AUTOGRAF PRZYJMUJ GO!
   expectedCard: {fileID: 11400000, guid: 448e05695a6489d4b8dc56b8df513c8e, type: 2}
-  badReaction: {fileID: 0}
-  goodReaction: {fileID: 0}
-  splashArt: {fileID: 0}
+  badReaction: {fileID: 1208040086343421634, guid: 1a31b629d57e83440b5df2de8f7eb48c, type: 3}
+  goodReaction: {fileID: 657193517335828509, guid: 8ea33d32ed3345e4eb3d0355feb90b6e, type: 3}
+  splashArt: {fileID: 657193517335828509, guid: 8ea33d32ed3345e4eb3d0355feb90b6e, type: 3}

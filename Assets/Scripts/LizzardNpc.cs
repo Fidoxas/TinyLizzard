@@ -5,9 +5,9 @@ using UnityEngine.Serialization;
 
 public class LizzardNpc : MonoBehaviour
 {
-    [SerializeField] private LizzardNPCSo lizzardNpcSo;
+    [SerializeField] private LizzardNpcSo lizzardNpcSo;
 
-    public event Action<LizzardNPCSo> OnDialogStarted;
+    public event Action<LizzardNpcSo> OnDialogStarted;
         public void StartDialog()
     {
         OnDialogStarted?.Invoke(lizzardNpcSo);

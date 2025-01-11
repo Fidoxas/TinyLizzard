@@ -1,18 +1,19 @@
-using System;
 using System.Collections;
 using SO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class DialogManager : MonoBehaviour
 {
     [SerializeField] private Image npcSplash;
     [SerializeField] private TextMeshProUGUI tmpDialogWindow;
+    [SerializeField] private GameManager _gameManager;
     [SerializeField] private float writingSlower = 0.05f;
     public bool waitingForAnswer;
     private bool isDialogActive; 
-    private LizzardNPCSo _npcSo;
+    private LizzardNpcSo _npcSo;
     private CardSo _answer;
     private LizzardNpc lizzardNpc;
 
@@ -22,26 +23,38 @@ public class DialogManager : MonoBehaviour
         isDialogActive = false;
         _npcSo = null;
         _answer = null;
+        _gameManager = FindObjectOfType<GameManager>();
+        
+        // Subskrypcja eventu przy starcie
+        Subscribe();
+
+        // Dodanie listenera na załadowanie nowej sceny
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void OnEnable()
+    private void OnDisable()
+    {
+        // Usuwanie listenera przy zniszczeniu obiektu
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Ponowna subskrypcja eventów po załadowaniu nowej sceny
+        Subscribe();
+    }
+
+    private void Subscribe()
     {
         lizzardNpc = FindObjectOfType<LizzardNpc>();
         if (lizzardNpc != null)
         {
             lizzardNpc.OnDialogStarted += StartDialogSequence;
+            Debug.Log("Subscribed to OnDialogStarted");
         }
     }
 
-    private void OnDisable()
-    {
-        if (lizzardNpc != null)
-        {
-            lizzardNpc.OnDialogStarted -= StartDialogSequence;
-        }
-    }
-
-    private void StartDialogSequence(LizzardNPCSo obj)
+    private void StartDialogSequence(LizzardNpcSo obj)
     {
         if (isDialogActive) return; 
         isDialogActive = true;     
@@ -56,6 +69,8 @@ public class DialogManager : MonoBehaviour
             }
         }
 
+        npcSplash.sprite = _npcSo.splashArt;
+
         StartCoroutine(DialogSequence());
     }
 
@@ -68,38 +83,49 @@ public class DialogManager : MonoBehaviour
         {
             yield return null;
         }
-
+        waitingForAnswer = false;
         if (_answer == _npcSo.expectedCard)
         {
-            yield return GoodDialog();
+            yield return GoodAnswer();
         }
         else
         {
-            yield return BadDialog();
+            yield return BadAnswer();
         }
 
         yield return new WaitForSeconds(2f);
         EndDialogSequence();
     }
 
-    private IEnumerator GoodDialog()
+    private IEnumerator GoodAnswer()
     {
         tmpDialogWindow.text = string.Empty;
+        npcSplash.sprite = _npcSo.goodReaction;
         foreach (var character in _npcSo.goodAnswerLog)
         {
             tmpDialogWindow.text += character;
             yield return new WaitForSeconds(writingSlower);
         }
+        yield return new WaitForSeconds(2f);
+        _gameManager.PassLv();
     }
 
-    private IEnumerator BadDialog()
+    private IEnumerator BadAnswer()
     {
         tmpDialogWindow.text = string.Empty;
+        npcSplash.sprite = _npcSo.badReaction;
         foreach (var character in _npcSo.badAnswerLog)
         {
             tmpDialogWindow.text += character;
             yield return new WaitForSeconds(writingSlower);
         }
+
+        if (lizzardNpc != null)
+        {
+            lizzardNpc.OnDialogStarted -= StartDialogSequence;
+        }
+        yield return new WaitForSeconds(2f);
+        _gameManager.DefeatLv();
     }
 
     private IEnumerator Dialog1()

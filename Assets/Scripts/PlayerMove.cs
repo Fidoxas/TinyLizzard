@@ -1,54 +1,60 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class PlayerMove : MonoBehaviour
 {
     private Rigidbody2D _rb;
-    [SerializeField] private float speed;
-    private bool inAir;
-    [FormerlySerializedAs("jumpHeight")] [SerializeField] private float jumpForce;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float jumpForce = 10f;
+    [SerializeField] private Animator anim;
+    private SpriteRenderer _sprite;
+    private bool isGrounded;
 
     void Start()
     {
+        _sprite = GetComponentInChildren<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        inAir = false;
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D other)
     {
-        inAir = true;
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
     }
 
     void Update()
     {
-        float Horizontal = Input.GetAxis("Horizontal");
+        float horizontal = Input.GetAxis("Horizontal");
 
-        if (Horizontal == 0)
-        {
-            _rb.linearVelocity = new Vector2(0f,_rb.linearVelocity.y);
+        _rb.linearVelocity = new Vector2(horizontal * speed, _rb.linearVelocity.y);
+
+        _sprite.transform.rotation = Quaternion.identity;
+
+        anim.SetBool("Walking", horizontal != 0);
+
+        if (horizontal > 0)
+        { 
+            _sprite.transform.rotation = Quaternion.Euler(0, 0, -5);
         }
-        if (Horizontal> 0 )
+        else if (horizontal < 0)
         {
-            _rb.linearVelocity = new Vector2(speed, _rb.linearVelocity.y);
+            _sprite.transform.rotation = Quaternion.Euler(0, 0, 5);
         }
 
-        if (Horizontal < 0)
+        if (Input.GetKeyDown(KeyCode.W) && isGrounded)
         {
-            _rb.linearVelocity = new Vector2(-speed, _rb.linearVelocity.y);
-        }
-        
-        if(Input.GetKeyDown(KeyCode.W))
-        {
-            if (!inAir)
-            {
-                _rb.AddForce(new Vector2(0,jumpForce), ForceMode2D.Impulse);
-            }
+            _rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
     }
 }
