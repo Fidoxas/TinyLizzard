@@ -5,7 +5,7 @@ public class PlayerMove : MonoBehaviour
 {
     private Rigidbody2D _rb;
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float jumpForce = 10f;
+    private float jumpForce = 7f;
     [SerializeField] private Animator anim;
     private SpriteRenderer _sprite;
     private bool isGrounded;

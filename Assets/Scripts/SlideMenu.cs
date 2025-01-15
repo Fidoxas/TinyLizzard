@@ -5,25 +5,30 @@ public class SlideMenu : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
 {
     public RectTransform menuPanel;
     public float slideSpeed = 300f;
-    public Vector2 hiddenPosition;
-    public Vector2 visiblePosition;
+
+    [SerializeField] private Vector2 hiddenPosition;
+    private Vector2 visiblePosition;
+    [SerializeField] private float range;
 
     private bool isMouseOver = false;
 
     void Start()
     {
-        menuPanel.anchoredPosition = hiddenPosition;
+        visiblePosition = hiddenPosition;
+        visiblePosition.y = hiddenPosition.y + range; 
     }
 
     void Update()
     {
         if (isMouseOver)
         {
-            menuPanel.anchoredPosition = Vector2.Lerp(menuPanel.anchoredPosition, visiblePosition, Time.deltaTime * slideSpeed);
+            menuPanel.anchoredPosition = new Vector2(menuPanel.anchoredPosition.x, 
+                Mathf.Lerp(menuPanel.anchoredPosition.y, visiblePosition.y, Time.deltaTime * slideSpeed));
         }
         else
         {
-            menuPanel.anchoredPosition = Vector2.Lerp(menuPanel.anchoredPosition, hiddenPosition, Time.deltaTime * slideSpeed);
+            menuPanel.anchoredPosition = new Vector2(menuPanel.anchoredPosition.x, 
+                Mathf.Lerp(menuPanel.anchoredPosition.y, hiddenPosition.y, Time.deltaTime * slideSpeed));
         }
     }
 

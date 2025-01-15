@@ -10,12 +10,17 @@ public class DialogManager : MonoBehaviour
     [SerializeField] private Image npcSplash;
     [SerializeField] private TextMeshProUGUI tmpDialogWindow;
     [SerializeField] private GameManager _gameManager;
+    [SerializeField] private GameObject cardsPanel;
+    [SerializeField] private GameObject dialogWindow;
     [SerializeField] private float writingSlower = 0.05f;
+    [SerializeField] private GameObject enterMarker;
+
     public bool waitingForAnswer;
-    private bool isDialogActive; 
+    private bool isDialogActive;
     private LizzardNpcSo _npcSo;
     private CardSo _answer;
     private LizzardNpc lizzardNpc;
+    private Coroutine blinkingCoroutine;
 
     private void Start()
     {
@@ -24,23 +29,19 @@ public class DialogManager : MonoBehaviour
         _npcSo = null;
         _answer = null;
         _gameManager = FindObjectOfType<GameManager>();
-        
-        // Subskrypcja eventu przy starcie
-        Subscribe();
 
-        // Dodanie listenera na załadowanie nowej sceny
+        Debug.Log("Subscribed");
+        Subscribe();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
-        // Usuwanie listenera przy zniszczeniu obiektu
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Ponowna subskrypcja eventów po załadowaniu nowej sceny
         Subscribe();
     }
 
@@ -56,34 +57,30 @@ public class DialogManager : MonoBehaviour
 
     private void StartDialogSequence(LizzardNpcSo obj)
     {
-        if (isDialogActive) return; 
-        isDialogActive = true;     
+        if (isDialogActive) return;
+        isDialogActive = true;
 
         _npcSo = obj;
 
-        foreach (Transform child in transform)
-        {
-            if (child.gameObject.TryGetComponent(out CanvasRenderer renderer))
-            {
-                child.gameObject.SetActive(true);
-            }
-        }
-
         npcSplash.sprite = _npcSo.splashArt;
-
+        npcSplash.gameObject.SetActive(true);
         StartCoroutine(DialogSequence());
     }
 
     private IEnumerator DialogSequence()
     {
+        yield return ShowSplashAndSound();
+        yield return WaitForEnter();
+        
         yield return Dialog1();
-        waitingForAnswer = true;
-
-        while (_answer == null)
-        {
-            yield return null;
-        }
-        waitingForAnswer = false;
+        yield return WaitForEnter();
+        
+        // 3. Cards panel
+        ShowCardsPanel(true);
+        yield return WaitForAnswer();
+        yield return new WaitForSeconds(1f);
+        ShowCardsPanel(false);
+        
         if (_answer == _npcSo.expectedCard)
         {
             yield return GoodAnswer();
@@ -92,15 +89,40 @@ public class DialogManager : MonoBehaviour
         {
             yield return BadAnswer();
         }
-
-        yield return new WaitForSeconds(2f);
+        yield return WaitForEnter();
+        //
+        // // End dialog
         EndDialogSequence();
     }
 
-    private IEnumerator GoodAnswer()
+    private IEnumerator ShowSplashAndSound()
+    {
+        npcSplash.sprite = _npcSo.splashArt;
+        // Play sound here if necessary
+        yield return null;
+    }
+
+    private IEnumerator Dialog1()
     {
         tmpDialogWindow.text = string.Empty;
-        npcSplash.sprite = _npcSo.goodReaction;
+        dialogWindow.SetActive(true);
+        foreach (var character in _npcSo.monolog)
+        {
+            tmpDialogWindow.text += character;
+            yield return new WaitForSeconds(writingSlower);
+        }
+    }
+
+    private void ShowCardsPanel(bool state)
+    {
+        dialogWindow.SetActive(!state);
+        cardsPanel.SetActive(state);
+    }
+
+      private IEnumerator GoodAnswer()
+    {
+        tmpDialogWindow.text = string.Empty;
+        npcSplash.sprite = _npcSo.goodReactionArt;
         foreach (var character in _npcSo.goodAnswerLog)
         {
             tmpDialogWindow.text += character;
@@ -113,7 +135,7 @@ public class DialogManager : MonoBehaviour
     private IEnumerator BadAnswer()
     {
         tmpDialogWindow.text = string.Empty;
-        npcSplash.sprite = _npcSo.badReaction;
+        npcSplash.sprite = _npcSo.badReactionArt;
         foreach (var character in _npcSo.badAnswerLog)
         {
             tmpDialogWindow.text += character;
@@ -128,15 +150,51 @@ public class DialogManager : MonoBehaviour
         _gameManager.DefeatLv();
     }
 
-    private IEnumerator Dialog1()
+    private IEnumerator Blinking(GameObject marker, float interval)
     {
-        tmpDialogWindow.text = string.Empty;
-        foreach (var character in _npcSo.monolog)
+        bool isVisible = false;
+
+        while (true)
         {
-            tmpDialogWindow.text += character;
-            yield return new WaitForSeconds(writingSlower);
+            isVisible = !isVisible;
+            marker.SetActive(isVisible);
+            yield return new WaitForSeconds(interval);
         }
     }
+
+    private IEnumerator WaitForEnter()
+    {
+        Debug.Log("czekam na enter");
+        blinkingCoroutine = StartCoroutine(Blinking(enterMarker, 0.5f));
+
+        // Czekaj na wciśnięcie klawisza Submit
+        while (!Input.GetButtonDown("Submit")) // lub Input.GetKeyDown(KeyCode.Space) dla konkretnego klawisza
+        {
+            yield return null; // Sprawdzaj co klatkę
+        }
+
+        // Zatrzymaj miganie
+        if (blinkingCoroutine != null)
+        {
+            StopCoroutine(blinkingCoroutine);
+        }
+
+        // Ukryj marker
+        enterMarker.SetActive(false);
+
+        Debug.Log("Wciśnięto klawisz Submit!");
+    }
+    
+    private IEnumerator WaitForAnswer()
+    {
+        waitingForAnswer = true;
+        while (_answer == null)
+        {
+            yield return null;
+        }
+        waitingForAnswer = false;
+    }
+
 
     public void GetAnswer(CardSo cardSo)
     {
@@ -151,7 +209,8 @@ public class DialogManager : MonoBehaviour
         waitingForAnswer = false;
         _npcSo = null;
         _answer = null;
-        isDialogActive = false; 
+        isDialogActive = false;
+
         foreach (Transform child in transform)
         {
             if (child.gameObject.TryGetComponent(out CanvasRenderer renderer))

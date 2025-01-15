@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         _currentScene = SceneManager.GetActiveScene();
+        // SceneManager.sceneLoaded += OnSceneLoaded;
     }
+
 
     void Update()
     {
@@ -28,26 +30,29 @@ public class GameManager : MonoBehaviour
 
     public void PassLv()
     {
-        // Załadowanie następnej sceny z listy
-        int currentIndex = _scenesNames.IndexOf(_currentScene.name); // Używamy nazwy sceny
+        // Pobierz aktualną nazwę sceny
+        string currentSceneName = SceneManager.GetActiveScene().name;
+    
+        // Znajdź indeks aktualnej sceny w liście
+        int currentIndex = _scenesNames.IndexOf(currentSceneName);
+
+        if (currentIndex == -1)
+        {
+            Debug.LogWarning("Aktualna scena nie znajduje się na liście scen!");
+            return;
+        }
+
+        // Jeśli to ostatnia scena, zakończ grę
         if (currentIndex == _scenesNames.Count - 1)
         {
             WinGame();
             return;
         }
 
-        if (currentIndex >= 0 && currentIndex + 1 < _scenesNames.Count)
-        {
-            string nextSceneName = _scenesNames[currentIndex + 1];
-            SceneManager.LoadScene(nextSceneName); 
-            _currentScene = SceneManager.GetActiveScene(); 
-        }
-        else
-        {
-            Debug.LogWarning("Brak kolejnej sceny do załadowania.");
-        }
+        // Załaduj następną scenę
+        string nextSceneName = _scenesNames[currentIndex + 1];
+        SceneManager.LoadScene(nextSceneName);
     }
-
     private void WinGame()
     {
         Debug.Log("Gratulacje, wygrałeś grę!");

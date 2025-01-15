@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e45e9a9a8e682104980467209a0fbc0d, type: 3}
+  m_Name: Baronyx
+  m_EditorClassIdentifier: 
+  expectedCard: {fileID: 11400000, guid: 64e1c045d8c4beb4bbe906340f5bdf96, type: 2}
+  roomArt: {fileID: -2699615200178430186, guid: ab94eaf85d8dd65498930909f5a9a9aa, type: 3}
+  monolog: Umiem otwieracz drzwi
+  badAnswerLog: gowno
+  goodAnswerLog: fajny
+  splashArt: {fileID: -5458319033319823603, guid: 8ce33ba0d71369a4e9fbddf49a1a2ab4, type: 3}
+  badReactionArt: {fileID: -1596775789960205441, guid: 172b865aed6b1704daf7a281b0eb8c28, type: 3}
+  goodReactionArt: {fileID: 9102254162956025944, guid: 754ef849c704f0447a114094aa56428a, type: 3}
+  neutralSfx: {fileID: 0}
+  badReactionSfx: {fileID: 0}
+  goodReactionSfx: {fileID: 0}

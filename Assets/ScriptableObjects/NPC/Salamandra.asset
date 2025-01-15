@@ -12,10 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45e9a9a8e682104980467209a0fbc0d, type: 3}
   m_Name: Salamandra
   m_EditorClassIdentifier: 
+  expectedCard: {fileID: 11400000, guid: 64e1c045d8c4beb4bbe906340f5bdf96, type: 2}
+  roomArt: {fileID: 375047498802865480, guid: 5c33ff9c992079045a38fe2f9cc384e2, type: 3}
   monolog: "Nie wystarczy na \u015Bwiecie kolor\xF3w by dor\xF3wn\u0107 mojej aurze"
   badAnswerLog: "twoja aura jest gorsza ni\u017Cpustego p\u0142utna"
   goodAnswerLog: "pomaluj m\xF3j \u015Bwiat<3"
-  expectedCard: {fileID: 11400000, guid: 64e1c045d8c4beb4bbe906340f5bdf96, type: 2}
-  badReaction: {fileID: -3545227098161279576, guid: bec6e2ba20b7320439d0e0b22c6f860a, type: 3}
-  goodReaction: {fileID: -598253457272044107, guid: c4e5a48a7afa7d84cacff8f9f59c67d0, type: 3}
-  splashArt: {fileID: 6258885814743432056, guid: f7c34a07bfc01944ba23207be7c4a22a, type: 3}
+  splashArt: {fileID: 5729239185780785332, guid: e8c97d8de3418b44f9d767122d5bdd64, type: 3}
+  badReactionArt: {fileID: 200609239397858171, guid: 644565bb59ed6e24f8b5be033ebc16e6, type: 3}
+  goodReactionArt: {fileID: 879981757816074452, guid: 4040e828392a35e4798283a617aad81a, type: 3}
+  neutralSfx: {fileID: 0}
+  badReactionSfx: {fileID: 0}
+  goodReactionSfx: {fileID: 0}
