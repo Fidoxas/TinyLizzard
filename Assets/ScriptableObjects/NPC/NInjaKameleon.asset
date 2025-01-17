@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45e9a9a8e682104980467209a0fbc0d, type: 3}
   m_Name: NInjaKameleon
   m_EditorClassIdentifier: 
-  expectedCard: {fileID: 11400000, guid: 64e1c045d8c4beb4bbe906340f5bdf96, type: 2}
+  expectedCard: {fileID: 11400000, guid: eddc1e1241a9c4b4caf52408cafbd85d, type: 2}
   roomArt: {fileID: 375047498802865480, guid: 5c33ff9c992079045a38fe2f9cc384e2, type: 3}
   monolog: "Nie wystarczy na \u015Bwiecie kolor\xF3w by dor\xF3wn\u0107 mojej aurze"
   badAnswerLog: "twoja aura jest gorsza ni\u017Cpustego p\u0142utna"

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45e9a9a8e682104980467209a0fbc0d, type: 3}
   m_Name: Baronyx
   m_EditorClassIdentifier: 
-  expectedCard: {fileID: 11400000, guid: 64e1c045d8c4beb4bbe906340f5bdf96, type: 2}
+  expectedCard: {fileID: 11400000, guid: 3970ef804bdb1094c893fb801715db31, type: 2}
   roomArt: {fileID: -2699615200178430186, guid: ab94eaf85d8dd65498930909f5a9a9aa, type: 3}
   monolog: Umiem otwieracz drzwi
   badAnswerLog: gowno

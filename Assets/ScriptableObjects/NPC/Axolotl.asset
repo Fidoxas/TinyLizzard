@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45e9a9a8e682104980467209a0fbc0d, type: 3}
   m_Name: Axolotl
   m_EditorClassIdentifier: 
-  expectedCard: {fileID: 11400000, guid: eddc1e1241a9c4b4caf52408cafbd85d, type: 2}
+  expectedCard: {fileID: 11400000, guid: 4dc7658fb0dfd5d4698049c7a22eb5dd, type: 2}
   roomArt: {fileID: 9219755220652559510, guid: f45c41475c01d8546855d4bee8e24d77, type: 3}
   monolog: IDKLOL
   badAnswerLog: NIE LUBIE CIE

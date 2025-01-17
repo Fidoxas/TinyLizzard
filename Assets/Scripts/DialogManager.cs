@@ -128,8 +128,9 @@ public class DialogManager : MonoBehaviour
             tmpDialogWindow.text += character;
             yield return new WaitForSeconds(writingSlower);
         }
-        yield return new WaitForSeconds(2f);
-        _gameManager.PassLv();
+        _gameManager.GetAutograph();
+        // yield return new WaitForSeconds(2f);
+        yield return null;
     }
 
     private IEnumerator BadAnswer()
@@ -146,7 +147,6 @@ public class DialogManager : MonoBehaviour
         {
             lizzardNpc.OnDialogStarted -= StartDialogSequence;
         }
-        yield return new WaitForSeconds(2f);
         _gameManager.DefeatLv();
     }
 
@@ -167,13 +167,10 @@ public class DialogManager : MonoBehaviour
         Debug.Log("czekam na enter");
         blinkingCoroutine = StartCoroutine(Blinking(enterMarker, 0.5f));
 
-        // Czekaj na wciśnięcie klawisza Submit
-        while (!Input.GetButtonDown("Submit")) // lub Input.GetKeyDown(KeyCode.Space) dla konkretnego klawisza
+        while (!Input.GetButtonDown("Submit"))
         {
-            yield return null; // Sprawdzaj co klatkę
+            yield return null; 
         }
-
-        // Zatrzymaj miganie
         if (blinkingCoroutine != null)
         {
             StopCoroutine(blinkingCoroutine);
